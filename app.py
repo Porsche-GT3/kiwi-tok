@@ -4,69 +4,78 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (PASTEL LEGÍVEL)
+# 1. CONFIGURAÇÃO VISUAL (BRANCO, LIMPO E ESPAÇADO)
 # ==============================================================================
 st.set_page_config(page_title="Kiwi Tok", page_icon="🥝", layout="wide")
 
-# PALETA DE CORES (LINDA E LEGÍVEL)
-COR_FUNDO = "#f4f8f0"       # Creme Esverdeado (Muito suave)
-COR_TEXTO = "#1a3300"       # Verde Floresta Escuro (Contraste alto, mas elegante)
-COR_DESTAQUE = "#558b2f"    # Verde Folha (Para títulos importantes)
-COR_BOTAO = "#7cb342"       # Verde Kiwi (Vibrante)
-COR_CARD = "#FFFFFF"        # Branco para os vídeos
+# PALETA DE CORES
+COR_FUNDO = "#f4f8f0"       # Creme Esverdeado Suave
+COR_TEXTO = "#1a3300"       # Verde Floresta Escuro (Legibilidade)
+COR_TEXTO_SECUNDARIO = "#33691e"
+COR_BOTAO = "#7cb342"       # Verde Kiwi
+COR_BORDA = "#dcedc8"       # Verde Pálido (Bordas)
 
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
-    /* RESET GERAL - FONTES E CORES */
+    /* RESET DE FONTE E ESPAÇAMENTO */
     html, body, [class*="css"], p, div, span, label, h1, h2, h3, h4, h5, h6 {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
-        line-height: 1.6; /* Aumentei para não encavalar */
+        line-height: 1.6 !important; /* Aumentei para evitar texto encavalado */
     }}
     
     .stApp {{ background-color: {COR_FUNDO} !important; }}
     #MainMenu {{visibility: hidden;}} footer {{visibility: hidden;}} header {{visibility: hidden;}}
     
-    /* BOTÃO DE FILTRO (EXPANDER) - Ajustado para não encavalar */
+    /* CABEÇALHO FLEXÍVEL (Corrige o título encavalado) */
+    .header-container {{
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid {COR_BORDA};
+    }}
+    
+    /* BOTÃO DE FILTRO (EXPANDER) */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         color: white !important;
         border-radius: 12px;
         font-weight: 700;
         font-size: 18px !important;
-        padding: 20px !important; /* Mais espaço */
-        box-shadow: 0 4px 10px rgba(124, 179, 66, 0.3);
+        padding: 20px !important;
+        margin-top: 10px;
+        box-shadow: 0 4px 10px rgba(124, 179, 66, 0.2);
     }}
     .streamlit-expanderHeader p {{ color: white !important; }}
     
-    /* BOTÕES NORMAIS */
+    /* BOTÕES GERAIS */
     .stButton > button {{
         background-color: {COR_BOTAO} !important;
         color: white !important;
         border: none;
         border-radius: 15px;
         font-weight: 900;
-        padding: 15px 20px;
-        width: 100%;
+        padding: 15px;
         font-size: 16px;
-        box-shadow: 0 4px 0px #558b2f; /* Efeito 3D sutil */
-        transition: all 0.2s;
+        box-shadow: 0 4px 0px #558b2f;
+        transition: transform 0.1s;
     }}
-    .stButton > button:hover {{
+    .stButton > button:active {{
         transform: translateY(2px);
         box-shadow: 0 2px 0px #558b2f;
     }}
     
-    /* INPUTS E SELECTBOX (Claros e Legíveis) */
+    /* INPUTS */
     .stTextInput input, .stSelectbox div[data-baseweb="select"] {{
-        color: {COR_TEXTO} !important;
         background-color: white !important;
-        border: 2px solid #dcedc8 !important;
+        border: 2px solid {COR_BORDA} !important;
+        color: {COR_TEXTO} !important;
         border-radius: 10px;
-        font-weight: 700;
-        height: 50px; /* Mais alto para facilitar o toque */
+        height: 50px;
     }}
     
     /* LOGIN BOX */
@@ -76,40 +85,39 @@ st.markdown(f"""
         border-radius: 25px;
         text-align: center;
         box-shadow: 0 10px 30px rgba(85, 139, 47, 0.1);
-        border: 1px solid #dcedc8;
+        border: 1px solid {COR_BORDA};
     }}
     
-    /* CARD DE VÍDEO (Estilo Pinterest Clean) */
+    /* CARD DE VÍDEO */
     .video-card {{
-        background: {COR_CARD};
+        background: white;
         border-radius: 20px;
         padding: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        border: 1px solid #f1f8e9;
+        margin-bottom: 30px; /* Mais espaço entre um vídeo e outro */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        border: 1px solid white;
     }}
     
-    /* BADGE DE NICHO (Corrigido para não ficar em cima do texto) */
+    /* BADGE DE NICHO (AGORA BRANCO COM BORDA) */
     .niche-badge {{
         display: inline-block;
-        background-color: {COR_BOTAO};
-        color: white !important;
-        padding: 6px 14px;
+        background-color: #FFFFFF; /* Fundo Branco */
+        color: {COR_BOTAO} !important; /* Texto Verde */
+        border: 2px solid {COR_BOTAO}; /* Borda Verde */
+        padding: 5px 12px;
         border-radius: 20px;
         font-weight: 800;
-        font-size: 0.85em;
+        font-size: 0.8em;
         letter-spacing: 0.5px;
-        white-space: nowrap; /* Impede quebra de linha */
+        white-space: nowrap;
     }}
     
-    /* AJUSTES MOBILE */
     iframe {{ width: 100% !important; border-radius: 12px; }}
-    
     </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. LOGIN COM ANIMAÇÃO
+# 2. LOGIN & ANIMAÇÃO
 # ==============================================================================
 def show_kiwi_animation():
     if st.session_state.get('animating', False):
@@ -118,7 +126,7 @@ def show_kiwi_animation():
             st.markdown("<br><br><br>", unsafe_allow_html=True)
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                st.markdown(f"<h2 style='text-align:center; color:{COR_DESTAQUE};'>Acessando Satélite...</h2>", unsafe_allow_html=True)
+                st.markdown(f"<h2 style='text-align:center; color:{COR_TEXTO};'>Acessando Satélite...</h2>", unsafe_allow_html=True)
                 components.html("""
                     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
                     <lottie-player src="https://lottie.host/8d061158-3655-4871-8985-898766792362/s2s1s8s6s7.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin: auto;" autoplay></lottie-player>
@@ -144,7 +152,6 @@ def check_password():
             <p style='font-weight:600; color:#777;'>Inteligência Viral</p>
         </div>
         """, unsafe_allow_html=True)
-        
         st.markdown("<br>", unsafe_allow_html=True)
         senha = st.text_input("Senha de Acesso:", type="password", placeholder="kiwi2026")
         
@@ -178,13 +185,16 @@ def generate_data(country, qtd=1500):
 # 4. INTERFACE PRINCIPAL
 # ==============================================================================
 
-# Cabeçalho Limpo
-c1, c2 = st.columns([1, 6])
-with c1: st.markdown("<h1 style='margin:0;'>🥝</h1>", unsafe_allow_html=True)
-with c2: st.markdown(f"<h1 style='margin:0; font-size:28px; padding-top:10px; color:{COR_DESTAQUE};'>Radar de Tendências</h1>", unsafe_allow_html=True)
-st.write("") 
+# CABEÇALHO NOVO (Sem encavalar)
+# Usando HTML Flexbox em vez de st.columns para garantir alinhamento perfeito
+st.markdown(f"""
+    <div class="header-container">
+        <span style='font-size: 40px;'>🥝</span>
+        <span style='font-size: 26px; font-weight: 900; color: {COR_TEXTO_SECUNDARIO}; padding-top: 5px;'>Radar de Tendências</span>
+    </div>
+""", unsafe_allow_html=True)
 
-# BOTÃO DE FILTRO (Estilo Botão Verde Bonito)
+# BOTÃO DE FILTRO
 with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO) 🔽", expanded=False):
     st.markdown("### 1. Selecione a Região")
     region = st.radio("", ["🇺🇸 Estados Unidos", "🇧🇷 Brasil"], index=1, horizontal=True)
@@ -197,20 +207,24 @@ with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO) 🔽", expanded=Fal
     cats.insert(0, "✨ Ver Todos")
     filtro_cat = st.selectbox("", cats)
 
-# FEED
+# TÍTULO DA SEÇÃO
 flag = "🇺🇸" if country_code == "US" else "🇧🇷"
-st.markdown(f"<h3 style='margin-top:20px; color:{COR_TEXTO}; border-bottom:2px solid #dcedc8; padding-bottom:10px;'>{flag} Resultados Encontrados</h3>", unsafe_allow_html=True)
+st.markdown(f"""
+    <div style="margin-top: 25px; margin-bottom: 20px;">
+        <h3 style="color:{COR_TEXTO}; font-weight: 800;">{flag} Feed de Resultados</h3>
+    </div>
+""", unsafe_allow_html=True)
 
 filtrado = db
 if filtro_cat != "✨ Ver Todos":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
+# RENDERIZAÇÃO DOS VÍDEOS
 for v in filtrado[:10]:
-    # Card Container
     st.markdown(f"""
     <div class="video-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <span style="font-weight:800; font-size:1.2em; color:{COR_DESTAQUE};">{v['user']}</span>
+            <span style="font-weight:800; font-size:1.1em; color:{COR_TEXTO_SECUNDARIO};">{v['user']}</span>
             <span class="niche-badge">{v['niche']}</span>
         </div>
     """, unsafe_allow_html=True)
@@ -227,13 +241,13 @@ for v in filtrado[:10]:
     
     st.markdown(f"""
         <div style="margin-top:15px; color:{COR_TEXTO};">
-            <div style="background:#f1f8e9; padding:15px; border-radius:12px; border-left: 5px solid {COR_BOTAO};">
-                <p style="margin:0; font-weight:bold; font-size:0.9em; text-transform:uppercase; color:{COR_BOTAO};">Análise Kiwi:</p>
+            <div style="background:#f9fbf7; padding:15px; border-radius:12px; border: 1px solid {COR_BORDA};">
+                <p style="margin:0; font-weight:bold; font-size:0.85em; text-transform:uppercase; color:{COR_BOTAO};">Análise Kiwi:</p>
                 <p style="margin:5px 0 0 0; font-weight:600;">{v['analise']}</p>
             </div>
-            <p style="font-weight:900; font-size:1.1em; margin-top:10px; text-align:right; color:{COR_DESTAQUE};">👁️ {v['views']} Views</p>
+            <p style="font-weight:900; font-size:1.1em; margin-top:10px; text-align:right; color:{COR_TEXTO_SECUNDARIO};">👁️ {v['views']} Views</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold;'>Kiwi Tok v14.0 • Design Pastel</center><br>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v15.0 • Clean Layout</center>", unsafe_allow_html=True)
