@@ -4,7 +4,7 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (BLINDADA E CLEAN)
+# 1. CONFIGURAÇÃO VISUAL (CORREÇÃO DE BUGS CSS)
 # ==============================================================================
 st.set_page_config(page_title="Kiwi Tok", page_icon="🥝", layout="wide")
 
@@ -18,8 +18,9 @@ st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
-    /* FONTES E CORES */
-    h1, h2, h3, h4, h5, p, span, div, button, input, label, a {{
+    /* --- CORREÇÃO GERAL DE FONTES --- */
+    /* Aplica a fonte apenas em elementos de texto, protegendo ícones */
+    h1, h2, h3, h4, h5, p, a, button, input, label, .stSelectbox div {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
         line-height: 1.5;
@@ -34,7 +35,7 @@ st.markdown(f"""
     .header-icon {{ font-size: 40px; margin-right: 15px; }}
     .header-title {{ font-size: 26px; font-weight: 900; color: #33691e; margin: 0; }}
     
-    /* --- BOTÃO FILTRO --- */
+    /* --- BOTÃO FILTRO (CORRIGIDO O ENCAVALAMENTO) --- */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         border-radius: 12px;
@@ -43,8 +44,18 @@ st.markdown(f"""
         color: white !important;
         border: none !important;
     }}
-    .streamlit-expanderHeader p {{ color: white !important; font-weight: 700 !important; }}
-    .streamlit-expanderHeader svg {{ fill: white !important; }}
+    /* Força o texto a ser branco e Quicksand */
+    .streamlit-expanderHeader p {{ 
+        color: white !important; 
+        font-weight: 700 !important; 
+        font-family: 'Quicksand', sans-serif !important;
+        margin: 0 !important;
+    }}
+    /* Protege o ícone da seta para não virar texto */
+    .streamlit-expanderHeader svg {{ 
+        fill: white !important; 
+        font-family: inherit !important;
+    }}
     
     /* --- BOTÕES DO STREAMLIT --- */
     .stButton > button {{
@@ -61,7 +72,7 @@ st.markdown(f"""
     }}
     .stButton > button:active {{ transform: translateY(2px); box-shadow: 0 2px 0px #558b2f; }}
     
-    /* --- CARD DE VÍDEO (ESTILO CARDÁPIO) --- */
+    /* --- CARD DE VÍDEO --- */
     .video-card {{
         background: white;
         border-radius: 20px;
@@ -71,7 +82,7 @@ st.markdown(f"""
         border: 1px solid white;
     }}
     
-    /* --- CAPA SIMULADA (O SEGREDO BLINDADO) --- */
+    /* --- CAPA SIMULADA BLINDADA --- */
     .fake-player {{
         background: linear-gradient(135deg, #e8f5e9 0%, #dcedc8 100%);
         height: 200px;
@@ -82,6 +93,7 @@ st.markdown(f"""
         margin-bottom: 15px;
         border: 2px solid {COR_BORDA};
         cursor: pointer;
+        text-decoration: none !important;
     }}
     .play-icon {{
         font-size: 50px;
@@ -90,10 +102,10 @@ st.markdown(f"""
     }}
     .fake-player:hover .play-icon {{ transform: scale(1.1); }}
     
-    /* --- LINK BUTTON (CSS Customizado para links parecerem botões) --- */
+    /* --- BOTÃO LINK CUSTOMIZADO --- */
     .custom-link-btn {{
         display: block;
-        background-color: {COR_TEXTO}; /* Botão escuro para contraste */
+        background-color: {COR_TEXTO};
         color: white !important;
         text-align: center;
         padding: 12px;
@@ -101,6 +113,7 @@ st.markdown(f"""
         font-weight: 800;
         margin-top: 10px;
         box-shadow: 0 4px 0px #000;
+        text-decoration: none !important;
     }}
     .custom-link-btn:active {{ transform: translateY(2px); box-shadow: 0 2px 0px #000; }}
     
@@ -181,7 +194,6 @@ def generate_data(country, qtd=1500):
     nichos_br = ["Marketing Digital", "Dropshipping", "Milhas Aéreas", "Investimentos", "Renda Extra", "Concursos", "Emagrecimento", "Treino em Casa", "Receitas Fit", "Nutrição", "Skincare", "Maquiagem", "Cabelo Cacheado", "Airfryer", "Churrasco", "Cerveja", "Pets", "Maternidade", "Viagem", "Fofoca", "BBB", "Sertanejo", "Funk", "Humor", "Podcast", "Futebol", "Games", "Free Fire", "Carros Rebaixados"]
     nichos_us = ["SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work", "Biohacking", "Keto Diet", "Pilates", "Mental Health", "Skincare ASMR", "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", "True Crime", "Cleaning ASMR", "Streetwear", "Sneakers", "Pickleball"]
     lista = nichos_us if country == "US" else nichos_br
-    # Links reais que abrem no app
     videos_pool = [
         "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
         "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
@@ -207,8 +219,8 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Filtro
-with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO) 🔽", expanded=False):
+# Filtro (Botão corrigido)
+with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO)", expanded=False):
     st.markdown("### 1. Região")
     region = st.radio("", ["🇺🇸 Estados Unidos", "🇧🇷 Brasil"], index=1, horizontal=True)
     country_code = "US" if "Estados Unidos" in region else "BR"
@@ -227,9 +239,8 @@ filtrado = db
 if filtro_cat != "✨ Ver Todos":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
-# Loop de Cards Blindados
+# Loop de Cards Blindados (Renderização HTML corrigida)
 for v in filtrado[:10]:
-    # O HTML abaixo cria o card visualmente
     st.markdown(f"""
     <div class="video-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -257,4 +268,4 @@ for v in filtrado[:10]:
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v18.0 • Sistema Blindado</center>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v19.0 • Final Fix</center>", unsafe_allow_html=True)
