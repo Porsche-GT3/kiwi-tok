@@ -19,6 +19,7 @@ st.markdown(f"""
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
     /* --- FONTES (Protegendo Ícones) --- */
+    /* Aplica a fonte Quicksand apenas em textos, para não quebrar os ícones do Streamlit */
     h1, h2, h3, h4, h5, p, a, button, input, label, .stSelectbox div {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
@@ -33,7 +34,7 @@ st.markdown(f"""
     .header-icon {{ font-size: 40px; margin-right: 15px; }}
     .header-title {{ font-size: 26px; font-weight: 900; color: #33691e; margin: 0; }}
     
-    /* --- BOTÃO FILTRO --- */
+    /* --- BOTÃO FILTRO (CORRIGIDO) --- */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         border-radius: 12px;
@@ -45,6 +46,7 @@ st.markdown(f"""
     .streamlit-expanderHeader p {{ 
         color: white !important; font-weight: 700 !important; font-family: 'Quicksand', sans-serif !important; margin: 0 !important; 
     }}
+    /* Protege a setinha do botão para não virar texto */
     .streamlit-expanderHeader svg {{ fill: white !important; }}
     
     /* --- BOTÕES --- */
@@ -152,7 +154,7 @@ def generate_data(country, qtd=1500):
     nichos_us = ["SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work", "Biohacking", "Keto Diet", "Pilates", "Mental Health", "Skincare ASMR", "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", "True Crime", "Cleaning ASMR", "Streetwear", "Sneakers", "Pickleball"]
     lista = nichos_us if country == "US" else nichos_br
     
-    # Voltamos aos links que funcionam com Embed
+    # Links verificados
     videos_pool = [
         "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
         "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
@@ -234,4 +236,4 @@ for v in filtrado[:10]:
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v21.0 • Original Player</center>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v21.0 • Original</center>", unsafe_allow_html=True)
