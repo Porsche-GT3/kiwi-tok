@@ -4,113 +4,145 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (TEMA ZEN + INFINITY)
+# 1. CONFIGURAÇÃO VISUAL (RESPONSIVA + ALTO CONTRASTE)
 # ==============================================================================
-st.set_page_config(page_title="Kiwi Tok Infinity", page_icon="🥝", layout="wide")
+st.set_page_config(page_title="Kiwi Tok Mobile", page_icon="🥝", layout="wide")
 
-# CORES
-COR_FUNDO = "#F1F8E9"
-COR_ACCENT = "#AED581"
-COR_TEXTO = "#33691E"
-COR_BOTAO = "#8BC34A"
+# CORES DE ALTO CONTRASTE
+COR_FUNDO = "#F4F6F0"       # Fundo quase branco (Off-white)
+COR_ACCENT = "#8BC34A"      # Verde Kiwi (Apenas detalhes)
+COR_TEXTO_TITULO = "#000000" # Preto Puro
+COR_TEXTO_CORPO = "#111111"  # Preto Suave
+COR_BOTAO = "#2E7D32"       # Verde Escuro (Melhor leitura no botão)
 
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
     
-    html, body, [class*="css"] {{ font-family: 'Nunito', sans-serif; color: {COR_TEXTO}; }}
+    html, body, [class*="css"] {{ 
+        font-family: 'Nunito', sans-serif; 
+        color: {COR_TEXTO_CORPO}; 
+    }}
+    
     .stApp {{ background-color: {COR_FUNDO}; }}
     #MainMenu {{visibility: hidden;}} footer {{visibility: hidden;}} header {{visibility: hidden;}}
     
-    [data-testid="stSidebar"] {{ background-color: #FFFFFF; border-right: 1px solid #DCEDC8; }}
+    [data-testid="stSidebar"] {{ background-color: #FFFFFF; border-right: 1px solid #ddd; }}
     
-    /* Botões */
+    /* Títulos bem pretos e legíveis */
+    h1, h2, h3 {{ color: {COR_TEXTO_TITULO} !important; font-weight: 900 !important; }}
+    p, div, span {{ color: {COR_TEXTO_CORPO}; }}
+    
+    /* Botões Grandes e Legíveis (Touch Friendly) */
     .stButton > button {{
-        background-color: {COR_BOTAO}; color: white; border-radius: 25px; border: none;
-        padding: 10px 25px; font-weight: 700; box-shadow: 0 4px 6px rgba(139, 195, 74, 0.2);
-        transition: all 0.3s ease;
+        background-color: {COR_BOTAO}; 
+        color: white !important; 
+        border-radius: 12px; 
+        border: none;
+        padding: 15px 20px; /* Mais área de toque */
+        font-weight: 800; 
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: all 0.2s ease;
+        width: 100%; /* Botão largo no celular */
     }}
-    .stButton > button:hover {{ transform: translateY(-2px); box-shadow: 0 6px 10px rgba(139, 195, 74, 0.3); }}
+    .stButton > button:hover {{ transform: scale(1.02); filter: brightness(1.1); }}
     
-    /* Login */
-    .login-container {{ background-color: white; padding: 40px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border: 1px solid #F0F4C3; }}
+    /* Login Mobile Friendly */
+    .login-container {{ 
+        background-color: white; 
+        padding: 30px 20px; 
+        border-radius: 20px; 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+        text-align: center; 
+        border: 1px solid #ccc;
+    }}
     
-    /* Cards */
+    /* Cards Responsivos */
     .video-card {{
-        background: white; padding: 20px; border-radius: 25px; border: 1px solid #F1F8E9;
-        margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.3s ease;
+        background: white; 
+        padding: 15px; 
+        border-radius: 15px; 
+        border: 1px solid #ddd;
+        margin-bottom: 20px; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
     }}
-    .video-card:hover {{ transform: translateY(-5px); box-shadow: 0 10px 25px rgba(139, 195, 74, 0.15); }}
     
-    /* Tags */
-    .country-badge {{ font-size: 0.8em; font-weight: bold; padding: 4px 10px; border-radius: 20px; background-color: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }}
+    /* Tags de Nicho */
+    .niche-badge {{
+        background-color: {COR_TEXTO_TITULO};
+        color: white !important;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.85em;
+        font-weight: bold;
+    }}
+    
+    /* Ajuste de iframe para celular */
+    iframe {{ width: 100% !important; }}
+    
     </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. LOGIN
+# 2. LOGIN ROBUSTO
 # ==============================================================================
 def check_password():
     if st.session_state.get('password_correct', False): return True
-    col1, col2, col3 = st.columns([1, 1, 1])
+    
+    # Colunas vazias para centralizar no PC, mas no celular ocupa tudo
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        st.markdown("""<div class="login-container"><h1 style='color:#8BC34A; font-size: 3em;'>🥝</h1><h2 style='color:#33691E;'>Kiwi Infinity</h2></div>""", unsafe_allow_html=True)
-        senha = st.text_input("Senha Mestra:", type="password", placeholder="Digite kiwi2026")
-        if st.button("Acessar Database", use_container_width=True):
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="login-container">
+            <h1 style='color:#2E7D32; font-size: 3em; margin:0;'>🥝</h1>
+            <h2 style='color:#000; margin-top:0;'>Acesso Mobile</h2>
+            <p style='color:#333; font-weight:bold;'>Login Seguro</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        senha = st.text_input("Digite a senha:", type="password", placeholder="kiwi2026")
+        
+        if st.button("🔓 ENTRAR AGORA"):
             if senha == "kiwi2026":
                 st.session_state['password_correct'] = True
                 st.rerun()
-            else: st.error("Acesso Negado.")
+            else: st.error("Senha incorreta.")
     return False
 
 if not check_password(): st.stop()
 
 # ==============================================================================
-# 3. MEGA DATA GERADOR (200+ NICHOS)
+# 3. DADOS (BRASIL & EUA)
 # ==============================================================================
 @st.cache_data
 def generate_global_data(country, qtd=1500):
     
-    # === LISTA MASSIVA BRASIL (100+ Nichos) ===
+    # === LISTA BRASIL ===
     nichos_br = [
-        # Dinheiro & Negócios
-        "Marketing Digital", "Dropshipping", "PLR", "Afiliados", "Milhas Aéreas", "Investimentos", "Day Trade", "Renda Extra", "Concursos Públicos", "Empreendedorismo Feminino", "Gestão de Tráfego", "Copywriting", "Loja de Roupa", "Revenda de Carros", "Bitcoin Brasil",
-        # Saúde & Beleza
-        "Emagrecimento", "Treino em Casa", "Receitas Fit", "Nutrição", "Skincare", "Maquiagem Tutorial", "Unhas Decoradas", "Cabelo Cacheado", "Transição Capilar", "Harmonização Facial", "Cirurgia Plástica", "Moda Plus Size", "Yoga Brasil", "Meditação",
-        # Hobbies & Lifestyle
-        "Airfryer Receitas", "Churrasco", "Cerveja Artesanal", "Vinhos", "Café Especial", "Decoração DIY", "Plantas e Suculentas", "Pets (Gatos)", "Pets (Cães)", "Maternidade Real", "Enxoval de Bebê", "Casamento", "Viagem Barata", "Motorhome Brasil", "Camping",
-        # Entretenimento & Trends
-        "Fofoca", "Big Brother Brasil", "A Fazenda", "Sertanejo", "Funk", "Trap Brasil", "Dança TikTok", "Humor de Casal", "Stand Up", "Podcast Cortes", "React", "True Crime BR", "Curiosidades", "Astronomia",
-        # Nichos Específicos
-        "Carros Rebaixados", "Som Automotivo", "Grau de Moto", "Futebol", "Cartola FC", "Apostas Esportivas", "Games Mobile", "Free Fire", "Roblox", "GTA RP", "PC Gamer", "Setup Gamer", "Teclado Mecânico", "Tatuagem", "Barbearia", "Sneakers BR"
+        "Marketing Digital", "Dropshipping", "PLR", "Afiliados", "Milhas Aéreas", "Investimentos", "Renda Extra", "Concursos", 
+        "Emagrecimento", "Treino em Casa", "Receitas Fit", "Nutrição", "Skincare", "Maquiagem", "Unhas", "Cabelo Cacheado", 
+        "Airfryer", "Churrasco", "Cerveja", "Café", "Decoração", "Pets", "Maternidade", "Viagem", 
+        "Fofoca", "BBB", "Sertanejo", "Funk", "Humor", "Podcast", "Futebol", "Games", "Free Fire", "Carros Rebaixados"
     ]
 
-    # === LISTA MASSIVA USA (100+ Nichos) ===
+    # === LISTA USA ===
     nichos_us = [
-        # Wealth & Biz
-        "SaaS Growth", "Indie Hackers", "AI Tools", "ChatGPT Prompts", "Crypto Trading", "NFTs", "Real Estate Investing", "Airbnb Arbitrage", "Wholesaling Houses", "Amazon FBA", "Print on Demand", "Affiliate Marketing", "High Ticket Sales", "Remote Work", "Digital Nomad",
-        # Health & Wellness
-        "Biohacking", "Keto Diet", "Carnivore Diet", "Intermittent Fasting", "Pilates", "Calisthenics", "Crossfit", "Ice Bath", "Mental Health", "ADHD Awareness", "Gut Health", "Hormone Balance", "Skincare ASMR", "Korean Skincare", "Clean Girl Aesthetic",
-        # Lifestyle & Hobbies
-        "Van Life", "Tiny Homes", "Homesteading", "Tradwife", "Sourdough Baking", "Coffee Art", "Pottery", "Woodworking", "3D Printing", "Mechanical Keyboards", "Gaming Setup", "Cozy Gaming", "BookTok", "Journaling", "Manifestation", "Astrology",
-        # Specific & Viral
-        "True Crime", "Cleaning ASMR", "Restocking", "Lunchbox Ideas", "Mom Life", "Gentle Parenting", "Montessori", "Wedding Tok", "Thrift Flip", "Streetwear", "Sneakerheads", "Old Money Aesthetic", "Quiet Luxury", "Watches", "Car Detailing", "F1", "Pickleball", "Golf Tips"
+        "SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work",
+        "Biohacking", "Keto Diet", "Pilates", "Ice Bath", "Mental Health", "Skincare ASMR", 
+        "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", 
+        "True Crime", "Cleaning ASMR", "Mom Life", "Streetwear", "Sneakers", "Watches", "Pickleball", "Golf"
     ]
 
-    # Seleciona a lista baseada no país
     if country == "US":
-        lista_nichos = nichos_us
-        analise_prefix = "Viral pattern detected in"
-        moeda = "$"
-        lang_code = "en"
+        lista = nichos_us
+        analise_txt = "Viral pattern detected. High retention."
     else:
-        lista_nichos = nichos_br
-        analise_prefix = "Padrão viral detectado em"
-        moeda = "R$"
-        lang_code = "pt"
+        lista = nichos_br
+        analise_txt = "Padrão viral detectado. Retenção alta."
 
-    # Vídeos Reais (Pool de visuais para preencher)
+    # Links que funcionam bem em mobile
     videos_pool = [
         "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
         "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
@@ -122,110 +154,95 @@ def generate_global_data(country, qtd=1500):
 
     data = []
     for i in range(qtd):
-        n = random.choice(lista_nichos)
-        views_num = random.randint(10, 900)
-        
-        # Cria nomes de usuários que parecem reais do nicho
-        user_prefix = n.lower().replace(" ", "").replace("&", "")[:8]
-        username = f"@{user_prefix}_{random.randint(10,99)}"
-        
+        n = random.choice(lista)
         item = {
             "id": i, 
-            "user": username, 
+            "user": f"@{n.lower().replace(' ','')}_{random.randint(10,99)}", 
             "niche": n,
             "url": random.choice(videos_pool), 
-            "views": f"{views_num}.{random.randint(1,9)}M",
+            "views": f"{random.randint(10, 900)}.{random.randint(1,9)}M",
             "shares": f"{random.randint(1, 50)}k",
-            "analise": f"{analise_prefix} **{n}**. High retention > 60%."
+            "analise": f"{analise_txt} ({n})"
         }
         data.append(item)
     return data
 
 # ==============================================================================
-# 4. INTERFACE
+# 4. INTERFACE PRINCIPAL
 # ==============================================================================
 
+# Sidebar Otimizada
 with st.sidebar:
-    st.title("🥝 Kiwi Tok")
-    st.caption("Infinity Database v9.0")
-    st.write("---")
+    st.markdown("## 🥝 Menu Kiwi")
     
-    # SELETOR DE PAÍS
-    st.markdown("**🌍 Base de Dados**")
-    region = st.radio("", ["🇺🇸 Estados Unidos (USA)", "🇧🇷 Brasil"], index=1)
+    # Botões grandes de seleção de país
+    region = st.radio("🌍 Escolha a Região:", ["🇺🇸 Estados Unidos", "🇧🇷 Brasil"], index=1)
     country_code = "US" if "Estados Unidos" in region else "BR"
     
-    st.write("---")
-    
-    # Gera os dados
+    # Geração de dados
     db = generate_global_data(country_code, 2000) 
     
-    # O FILTRO "INFINITO"
-    st.markdown(f"**📂 Categorias ({country_code})**")
-    # Pega os nichos únicos e ordena
+    st.markdown("---")
+    st.markdown("**📂 Filtro de Nicho**")
     cats = sorted(list(set([x['niche'] for x in db])))
     cats.insert(0, "✨ Ver Tudo")
-    
     filtro_cat = st.selectbox("", cats)
-    if filtro_cat != "✨ Ver Tudo":
-        st.caption(f"Filtrando apenas: {filtro_cat}")
     
-    st.write("---")
-    if st.button("Sair"):
+    st.markdown("---")
+    if st.button("🚪 Sair do App"):
         st.session_state['password_correct'] = False
         st.rerun()
 
 # Conteúdo Principal
 flag = "🇺🇸" if country_code == "US" else "🇧🇷"
-st.markdown(f"<h1 style='color: #33691E;'>{flag} Radar de Tendências</h1>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align:center; color:#000;'>{flag} Radar Viral</h2>", unsafe_allow_html=True)
 
-# Cards de Métricas
-m1, m2, m3 = st.columns(3)
-m1.metric("Vídeos Indexados", "2,000+")
-m2.metric("Nichos Rastreados", len(cats)-1) # Mostra o número real (aprox 100)
-m3.metric("Live Status", "🟢 Online")
+# Métricas em uma linha só (scrollable no mobile se precisar)
+col_m1, col_m2 = st.columns(2)
+col_m1.metric("Vídeos", "2.000+")
+col_m2.metric("Status", "Online 🟢")
 
-# Lógica de Filtro
+# Filtro Lógica
 filtrado = db
 if filtro_cat != "✨ Ver Tudo":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
 st.write("") 
 
-# Grid
-col1, col2 = st.columns(2)
+# GRID RESPONSIVO (O Segredo)
+# No celular, st.columns empilha automaticamente.
+# Vamos usar container para garantir largura total.
 
-for i, v in enumerate(filtrado[:20]):
-    local = col1 if i % 2 == 0 else col2
-    with local:
-        st.markdown(f"""
-        <div class="video-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <div>
-                    <span style="font-weight:800; font-size:1.1em; color:#33691E;">{v['user']}</span>
-                    <br><span style="font-size:0.8em; color:#7CB342;">{flag} {v['niche']}</span>
-                </div>
-                <span class="country-badge">{v['views']} Views</span>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Player (Embed com Fallback)
-        try: vid_id = v['url'].split("/video/")[1].split("?")[0]
-        except: vid_id = "7258384074697313562"
-        
-        components.html(f"""
-            <blockquote class="tiktok-embed" cite="{v['url']}" data-video-id="{vid_id}" style="max-width: 100%;min-width: 200px;" > 
-            <section> <a target="_blank" href="{v['url']}">Ver</a> </section> </blockquote> 
-            <script async src="https://www.tiktok.com/embed.js"></script>
-        """, height=380)
-        
-        st.markdown(f"""
-            <div style="margin-top:10px; padding:12px; background-color:#F9FBF7; border-radius:15px; border:1px solid #F1F8E9;">
-                <div style="font-weight:bold; color:#558B2F; font-size:0.9em; margin-bottom:4px;">🥝 Análise IA:</div>
-                <div style="font-size:0.85em; color:#555;">{v['analise']}</div>
-                <div style="margin-top:8px; font-size:0.8em; color:#999;">🔁 {v['shares']} Shares</div>
-            </div>
+for i, v in enumerate(filtrado[:15]): # Limite de 15 para carregar rápido no 4G
+    
+    # Card Container
+    st.markdown(f"""
+    <div class="video-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:900; font-size:1.1em; color:#000;">{v['user']}</span>
+            <span class="niche-badge">{v['niche']}</span>
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+    
+    # Player Seguro (Tenta extrair ID, fallback para Khaby Lame se falhar)
+    try: vid_id = v['url'].split("/video/")[1].split("?")[0]
+    except: vid_id = "7258384074697313562"
+    
+    # Embed ajustado para largura 100%
+    components.html(f"""
+        <style>body{{margin:0;padding:0;}}</style>
+        <blockquote class="tiktok-embed" cite="{v['url']}" data-video-id="{vid_id}" style="max-width: 100%; min-width: 100%;" > 
+        <section> <a target="_blank" href="{v['url']}">Ver no TikTok</a> </section> </blockquote> 
+        <script async src="https://www.tiktok.com/embed.js"></script>
+    """, height=340)
+    
+    st.markdown(f"""
+        <div style="margin-top:10px; padding:10px; background-color:#f0f0f0; border-radius:10px;">
+            <div style="font-weight:bold; color:#000; font-size:0.9em;">📊 Análise:</div>
+            <div style="font-size:0.9em; color:#333;">{v['analise']}</div>
+            <div style="margin-top:5px; font-weight:800; color:#2E7D32;">👁️ {v['views']} • 🔁 {v['shares']}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown("<br><center style='color:#AED581'>Kiwi Tok Infinity • v9.0</center>", unsafe_allow_html=True)
+st.markdown("<br><center style='color:#999; font-size:0.8em;'>Kiwi Tok Mobile v10.0</center>", unsafe_allow_html=True)
