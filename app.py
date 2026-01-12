@@ -4,55 +4,66 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (BRANCO, LIMPO E ESPAÇADO)
+# 1. CONFIGURAÇÃO VISUAL (CORRIGIDA E LIMPA)
 # ==============================================================================
 st.set_page_config(page_title="Kiwi Tok", page_icon="🥝", layout="wide")
 
 # PALETA DE CORES
-COR_FUNDO = "#f4f8f0"       # Creme Esverdeado Suave
+COR_FUNDO = "#f4f8f0"       # Creme Esverdeado
 COR_TEXTO = "#1a3300"       # Verde Floresta Escuro (Legibilidade)
 COR_TEXTO_SECUNDARIO = "#33691e"
 COR_BOTAO = "#7cb342"       # Verde Kiwi
-COR_BORDA = "#dcedc8"       # Verde Pálido (Bordas)
+COR_BORDA = "#dcedc8"       # Verde Pálido
 
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
-    /* RESET DE FONTE E ESPAÇAMENTO */
-    html, body, [class*="css"], p, div, span, label, h1, h2, h3, h4, h5, h6 {{
+    /* --- CORREÇÃO DO ERRO DE FONTE --- */
+    /* Aplicamos a fonte APENAS em textos legíveis, não em ícones/símbolos */
+    h1, h2, h3, h4, h5, h6, p, span, div, button, input, label {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
-        line-height: 1.6 !important; /* Aumentei para evitar texto encavalado */
+        line-height: 1.5;
     }}
     
+    /* Protege os ícones do Streamlit para não virarem texto bagunçado */
+    .material-icons, [data-testid="stMarkdownContainer"] svg {{
+        font-family: inherit !important;
+    }}
+
     .stApp {{ background-color: {COR_FUNDO} !important; }}
     #MainMenu {{visibility: hidden;}} footer {{visibility: hidden;}} header {{visibility: hidden;}}
     
-    /* CABEÇALHO FLEXÍVEL (Corrige o título encavalado) */
+    /* --- CABEÇALHO --- */
     .header-container {{
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding-bottom: 20px;
-        margin-bottom: 10px;
-        border-bottom: 2px solid {COR_BORDA};
+        padding-bottom: 10px;
+        margin-bottom: 20px; /* Espaço extra antes do filtro */
     }}
+    .header-icon {{ font-size: 45px; margin-right: 15px; }}
+    .header-title {{ font-size: 28px; font-weight: 900; color: {COR_TEXTO_SECUNDARIO}; margin: 0; }}
     
-    /* BOTÃO DE FILTRO (EXPANDER) */
+    /* --- BOTÃO DE FILTRO (EXPANDER) --- */
+    /* Adicionada margem superior para não colar no título */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         color: white !important;
         border-radius: 12px;
         font-weight: 700;
         font-size: 18px !important;
-        padding: 20px !important;
-        margin-top: 10px;
+        padding: 15px 20px !important;
+        margin-top: 25px !important; /* AQUI ESTÁ A CORREÇÃO DO ENCAVALAMENTO */
         box-shadow: 0 4px 10px rgba(124, 179, 66, 0.2);
+        border: none !important;
     }}
-    .streamlit-expanderHeader p {{ color: white !important; }}
+    /* Garante que o texto dentro do botão seja branco */
+    .streamlit-expanderHeader p, .streamlit-expanderHeader span {{ 
+        color: white !important; 
+    }}
     
-    /* BOTÕES GERAIS */
+    /* --- BOTÕES GERAIS --- */
     .stButton > button {{
         background-color: {COR_BOTAO} !important;
         color: white !important;
@@ -64,12 +75,9 @@ st.markdown(f"""
         box-shadow: 0 4px 0px #558b2f;
         transition: transform 0.1s;
     }}
-    .stButton > button:active {{
-        transform: translateY(2px);
-        box-shadow: 0 2px 0px #558b2f;
-    }}
+    .stButton > button:active {{ transform: translateY(2px); box-shadow: 0 2px 0px #558b2f; }}
     
-    /* INPUTS */
+    /* --- INPUTS --- */
     .stTextInput input, .stSelectbox div[data-baseweb="select"] {{
         background-color: white !important;
         border: 2px solid {COR_BORDA} !important;
@@ -78,7 +86,7 @@ st.markdown(f"""
         height: 50px;
     }}
     
-    /* LOGIN BOX */
+    /* --- LOGIN --- */
     .login-box {{
         background: white;
         padding: 40px;
@@ -88,26 +96,26 @@ st.markdown(f"""
         border: 1px solid {COR_BORDA};
     }}
     
-    /* CARD DE VÍDEO */
+    /* --- CARD DE VÍDEO --- */
     .video-card {{
         background: white;
         border-radius: 20px;
         padding: 20px;
-        margin-bottom: 30px; /* Mais espaço entre um vídeo e outro */
+        margin-bottom: 30px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         border: 1px solid white;
     }}
     
-    /* BADGE DE NICHO (AGORA BRANCO COM BORDA) */
+    /* --- BADGE DE NICHO (BRANCO) --- */
     .niche-badge {{
         display: inline-block;
-        background-color: #FFFFFF; /* Fundo Branco */
-        color: {COR_BOTAO} !important; /* Texto Verde */
-        border: 2px solid {COR_BOTAO}; /* Borda Verde */
-        padding: 5px 12px;
+        background-color: #FFFFFF;   /* Fundo BRANCO */
+        color: {COR_BOTAO} !important; /* Texto VERDE */
+        border: 2px solid {COR_BOTAO}; /* Borda VERDE */
+        padding: 5px 14px;
         border-radius: 20px;
         font-weight: 800;
-        font-size: 0.8em;
+        font-size: 0.85em;
         letter-spacing: 0.5px;
         white-space: nowrap;
     }}
@@ -173,7 +181,14 @@ def generate_data(country, qtd=1500):
     nichos_br = ["Marketing Digital", "Dropshipping", "Milhas Aéreas", "Investimentos", "Renda Extra", "Concursos", "Emagrecimento", "Treino em Casa", "Receitas Fit", "Nutrição", "Skincare", "Maquiagem", "Cabelo Cacheado", "Airfryer", "Churrasco", "Cerveja", "Pets", "Maternidade", "Viagem", "Fofoca", "BBB", "Sertanejo", "Funk", "Humor", "Podcast", "Futebol", "Games", "Free Fire", "Carros Rebaixados"]
     nichos_us = ["SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work", "Biohacking", "Keto Diet", "Pilates", "Mental Health", "Skincare ASMR", "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", "True Crime", "Cleaning ASMR", "Streetwear", "Sneakers", "Pickleball"]
     lista = nichos_us if country == "US" else nichos_br
-    videos_pool = ["https://www.tiktok.com/@amazonhome/video/7298123456789012345", "https://www.tiktok.com/@hudabeauty/video/7234567890123456789", "https://www.tiktok.com/@apple/video/7306076366050512174", "https://www.tiktok.com/@tiktok/video/7258384074697313562", "https://www.tiktok.com/@khaby.lame/video/7258384074697313562"]
+    # Pool de vídeos para demo
+    videos_pool = [
+        "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
+        "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
+        "https://www.tiktok.com/@apple/video/7306076366050512174",
+        "https://www.tiktok.com/@tiktok/video/7258384074697313562",
+        "https://www.tiktok.com/@khaby.lame/video/7258384074697313562"
+    ]
     data = []
     for i in range(qtd):
         n = random.choice(lista)
@@ -185,16 +200,15 @@ def generate_data(country, qtd=1500):
 # 4. INTERFACE PRINCIPAL
 # ==============================================================================
 
-# CABEÇALHO NOVO (Sem encavalar)
-# Usando HTML Flexbox em vez de st.columns para garantir alinhamento perfeito
+# Cabeçalho com HTML Puro (Mais seguro contra bugs de layout)
 st.markdown(f"""
     <div class="header-container">
-        <span style='font-size: 40px;'>🥝</span>
-        <span style='font-size: 26px; font-weight: 900; color: {COR_TEXTO_SECUNDARIO}; padding-top: 5px;'>Radar de Tendências</span>
+        <span class="header-icon">🥝</span>
+        <h1 class="header-title">Radar de Tendências</h1>
     </div>
 """, unsafe_allow_html=True)
 
-# BOTÃO DE FILTRO
+# BOTÃO DE FILTRO (Com margem corrigida no CSS acima)
 with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO) 🔽", expanded=False):
     st.markdown("### 1. Selecione a Região")
     region = st.radio("", ["🇺🇸 Estados Unidos", "🇧🇷 Brasil"], index=1, horizontal=True)
@@ -207,10 +221,10 @@ with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO) 🔽", expanded=Fal
     cats.insert(0, "✨ Ver Todos")
     filtro_cat = st.selectbox("", cats)
 
-# TÍTULO DA SEÇÃO
+# Subtítulo
 flag = "🇺🇸" if country_code == "US" else "🇧🇷"
 st.markdown(f"""
-    <div style="margin-top: 25px; margin-bottom: 20px;">
+    <div style="margin-top: 20px; margin-bottom: 20px; border-bottom: 2px solid {COR_BORDA}; padding-bottom: 10px;">
         <h3 style="color:{COR_TEXTO}; font-weight: 800;">{flag} Feed de Resultados</h3>
     </div>
 """, unsafe_allow_html=True)
@@ -219,7 +233,7 @@ filtrado = db
 if filtro_cat != "✨ Ver Todos":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
-# RENDERIZAÇÃO DOS VÍDEOS
+# Loop de Vídeos
 for v in filtrado[:10]:
     st.markdown(f"""
     <div class="video-card">
@@ -250,4 +264,4 @@ for v in filtrado[:10]:
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v15.0 • Clean Layout</center>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v16.0 • Layout Corrigido</center>", unsafe_allow_html=True)
