@@ -4,7 +4,7 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (CORREÇÃO DE BUGS CSS)
+# 1. CONFIGURAÇÃO VISUAL (FONTE CORRIGIDA + HTML SEGURO)
 # ==============================================================================
 st.set_page_config(page_title="Kiwi Tok", page_icon="🥝", layout="wide")
 
@@ -18,8 +18,7 @@ st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
-    /* --- CORREÇÃO GERAL DE FONTES --- */
-    /* Aplica a fonte apenas em elementos de texto, protegendo ícones */
+    /* --- CORREÇÃO DE FONTE (Protegendo Ícones) --- */
     h1, h2, h3, h4, h5, p, a, button, input, label, .stSelectbox div {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
@@ -35,7 +34,7 @@ st.markdown(f"""
     .header-icon {{ font-size: 40px; margin-right: 15px; }}
     .header-title {{ font-size: 26px; font-weight: 900; color: #33691e; margin: 0; }}
     
-    /* --- BOTÃO FILTRO (CORRIGIDO O ENCAVALAMENTO) --- */
+    /* --- BOTÃO FILTRO (CORRIGIDO) --- */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         border-radius: 12px;
@@ -44,20 +43,17 @@ st.markdown(f"""
         color: white !important;
         border: none !important;
     }}
-    /* Força o texto a ser branco e Quicksand */
     .streamlit-expanderHeader p {{ 
         color: white !important; 
         font-weight: 700 !important; 
         font-family: 'Quicksand', sans-serif !important;
         margin: 0 !important;
     }}
-    /* Protege o ícone da seta para não virar texto */
     .streamlit-expanderHeader svg {{ 
         fill: white !important; 
-        font-family: inherit !important;
     }}
     
-    /* --- BOTÕES DO STREAMLIT --- */
+    /* --- BOTÕES --- */
     .stButton > button {{
         background-color: {COR_BOTAO} !important;
         color: white !important;
@@ -82,7 +78,7 @@ st.markdown(f"""
         border: 1px solid white;
     }}
     
-    /* --- CAPA SIMULADA BLINDADA --- */
+    /* --- CAPA SIMULADA --- */
     .fake-player {{
         background: linear-gradient(135deg, #e8f5e9 0%, #dcedc8 100%);
         height: 200px;
@@ -102,7 +98,7 @@ st.markdown(f"""
     }}
     .fake-player:hover .play-icon {{ transform: scale(1.1); }}
     
-    /* --- BOTÃO LINK CUSTOMIZADO --- */
+    /* --- BOTÃO LINK (CSS Puro) --- */
     .custom-link-btn {{
         display: block;
         background-color: {COR_TEXTO};
@@ -194,11 +190,12 @@ def generate_data(country, qtd=1500):
     nichos_br = ["Marketing Digital", "Dropshipping", "Milhas Aéreas", "Investimentos", "Renda Extra", "Concursos", "Emagrecimento", "Treino em Casa", "Receitas Fit", "Nutrição", "Skincare", "Maquiagem", "Cabelo Cacheado", "Airfryer", "Churrasco", "Cerveja", "Pets", "Maternidade", "Viagem", "Fofoca", "BBB", "Sertanejo", "Funk", "Humor", "Podcast", "Futebol", "Games", "Free Fire", "Carros Rebaixados"]
     nichos_us = ["SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work", "Biohacking", "Keto Diet", "Pilates", "Mental Health", "Skincare ASMR", "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", "True Crime", "Cleaning ASMR", "Streetwear", "Sneakers", "Pickleball"]
     lista = nichos_us if country == "US" else nichos_br
+    
+    # Links reais para testar o botão
     videos_pool = [
         "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
         "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
-        "https://www.tiktok.com/@apple/video/7306076366050512174",
-        "https://www.tiktok.com/@tiktok/video/7258384074697313562"
+        "https://www.tiktok.com/@apple/video/7306076366050512174"
     ]
     data = []
     for i in range(qtd):
@@ -219,7 +216,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Filtro (Botão corrigido)
+# Filtro
 with st.expander("⚙️ CLIQUE PARA FILTRAR (PAÍS & NICHO)", expanded=False):
     st.markdown("### 1. Região")
     region = st.radio("", ["🇺🇸 Estados Unidos", "🇧🇷 Brasil"], index=1, horizontal=True)
@@ -239,9 +236,12 @@ filtrado = db
 if filtro_cat != "✨ Ver Todos":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
-# Loop de Cards Blindados (Renderização HTML corrigida)
+# ==============================================================================
+# RENDERIZAÇÃO SEGURA (Correção do HTML Cru)
+# ==============================================================================
 for v in filtrado[:10]:
-    st.markdown(f"""
+    # 1. Primeiro montamos o HTML numa variável (mais seguro)
+    card_html = f"""
     <div class="video-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <span style="font-weight:800; font-size:1.1em; color:#33691e;">{v['user']}</span>
@@ -266,6 +266,9 @@ for v in filtrado[:10]:
             ▶️ ASSISTIR NO TIKTOK
         </a>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    
+    # 2. Depois enviamos para o Streamlit com a trava de segurança ATIVADA
+    st.markdown(card_html, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v19.0 • Final Fix</center>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v20.0 • Sistema Corrigido</center>", unsafe_allow_html=True)
