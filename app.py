@@ -4,7 +4,7 @@ import random
 import time
 
 # ==============================================================================
-# 1. CONFIGURAÇÃO VISUAL (FONTE CORRIGIDA + HTML SEGURO)
+# 1. CONFIGURAÇÃO VISUAL (PLAYER REAL + DESIGN LIMPO)
 # ==============================================================================
 st.set_page_config(page_title="Kiwi Tok", page_icon="🥝", layout="wide")
 
@@ -18,12 +18,11 @@ st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
     
-    /* --- CORREÇÃO DE FONTE (Protegendo Ícones) --- */
+    /* --- FONTES (Protegendo Ícones) --- */
     h1, h2, h3, h4, h5, p, a, button, input, label, .stSelectbox div {{
         font-family: 'Quicksand', sans-serif !important;
         color: {COR_TEXTO};
         line-height: 1.5;
-        text-decoration: none !important;
     }}
     
     .stApp {{ background-color: {COR_FUNDO} !important; }}
@@ -34,7 +33,7 @@ st.markdown(f"""
     .header-icon {{ font-size: 40px; margin-right: 15px; }}
     .header-title {{ font-size: 26px; font-weight: 900; color: #33691e; margin: 0; }}
     
-    /* --- BOTÃO FILTRO (CORRIGIDO) --- */
+    /* --- BOTÃO FILTRO --- */
     .streamlit-expanderHeader {{
         background-color: {COR_BOTAO} !important;
         border-radius: 12px;
@@ -44,14 +43,9 @@ st.markdown(f"""
         border: none !important;
     }}
     .streamlit-expanderHeader p {{ 
-        color: white !important; 
-        font-weight: 700 !important; 
-        font-family: 'Quicksand', sans-serif !important;
-        margin: 0 !important;
+        color: white !important; font-weight: 700 !important; font-family: 'Quicksand', sans-serif !important; margin: 0 !important; 
     }}
-    .streamlit-expanderHeader svg {{ 
-        fill: white !important; 
-    }}
+    .streamlit-expanderHeader svg {{ fill: white !important; }}
     
     /* --- BOTÕES --- */
     .stButton > button {{
@@ -78,41 +72,6 @@ st.markdown(f"""
         border: 1px solid white;
     }}
     
-    /* --- CAPA SIMULADA --- */
-    .fake-player {{
-        background: linear-gradient(135deg, #e8f5e9 0%, #dcedc8 100%);
-        height: 200px;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 15px;
-        border: 2px solid {COR_BORDA};
-        cursor: pointer;
-        text-decoration: none !important;
-    }}
-    .play-icon {{
-        font-size: 50px;
-        opacity: 0.8;
-        transition: transform 0.2s;
-    }}
-    .fake-player:hover .play-icon {{ transform: scale(1.1); }}
-    
-    /* --- BOTÃO LINK (CSS Puro) --- */
-    .custom-link-btn {{
-        display: block;
-        background-color: {COR_TEXTO};
-        color: white !important;
-        text-align: center;
-        padding: 12px;
-        border-radius: 10px;
-        font-weight: 800;
-        margin-top: 10px;
-        box-shadow: 0 4px 0px #000;
-        text-decoration: none !important;
-    }}
-    .custom-link-btn:active {{ transform: translateY(2px); box-shadow: 0 2px 0px #000; }}
-    
     /* --- BADGE --- */
     .niche-badge {{
         background-color: white;
@@ -131,6 +90,8 @@ st.markdown(f"""
         color: {COR_TEXTO} !important;
         border-radius: 10px;
     }}
+    
+    iframe {{ width: 100% !important; border-radius: 12px; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -167,7 +128,7 @@ def check_password():
         <div style="background:white; padding:40px; border-radius:20px; text-align:center; border:1px solid {COR_BORDA}; margin-top:30px;">
             <div style="font-size:50px;">🥝</div>
             <h2 style="color:{COR_BOTAO}; margin:10px 0;">Kiwi Tok</h2>
-            <p style="font-weight:700; color:#888;">Acesso Blindado</p>
+            <p style="font-weight:700; color:#888;">Acesso Oficial</p>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
@@ -191,16 +152,17 @@ def generate_data(country, qtd=1500):
     nichos_us = ["SaaS Growth", "AI Tools", "Crypto", "Real Estate", "Amazon FBA", "Remote Work", "Biohacking", "Keto Diet", "Pilates", "Mental Health", "Skincare ASMR", "Van Life", "Tiny Homes", "Tradwife", "Pottery", "Woodworking", "Gaming Setup", "True Crime", "Cleaning ASMR", "Streetwear", "Sneakers", "Pickleball"]
     lista = nichos_us if country == "US" else nichos_br
     
-    # Links reais para testar o botão
+    # Voltamos aos links que funcionam com Embed
     videos_pool = [
         "https://www.tiktok.com/@amazonhome/video/7298123456789012345", 
         "https://www.tiktok.com/@hudabeauty/video/7234567890123456789",
-        "https://www.tiktok.com/@apple/video/7306076366050512174"
+        "https://www.tiktok.com/@apple/video/7306076366050512174",
+        "https://www.tiktok.com/@tiktok/video/7258384074697313562"
     ]
     data = []
     for i in range(qtd):
         n = random.choice(lista)
-        item = {"id": i, "user": f"@{n.lower().replace(' ','')}_{random.randint(10,99)}", "niche": n, "url": random.choice(videos_pool), "views": f"{random.randint(10, 900)}K", "analise": f"🔥 Alta retenção: O hook visual acontece nos primeiros 2s."}
+        item = {"id": i, "user": f"@{n.lower().replace(' ','')}_{random.randint(10,99)}", "niche": n, "url": random.choice(videos_pool), "views": f"{random.randint(10, 900)}K", "analise": f"🔥 Hook visual forte nos primeiros segundos."}
         data.append(item)
     return data
 
@@ -237,38 +199,39 @@ if filtro_cat != "✨ Ver Todos":
     filtrado = [x for x in filtrado if x['niche'] == filtro_cat]
 
 # ==============================================================================
-# RENDERIZAÇÃO SEGURA (Correção do HTML Cru)
+# RENDERIZAÇÃO: VOLTANDO AO PLAYER REAL (IFRAME)
 # ==============================================================================
 for v in filtrado[:10]:
-    # 1. Primeiro montamos o HTML numa variável (mais seguro)
-    card_html = f"""
+    # Cria o TOPO do card com HTML bonito (seguro)
+    st.markdown(f"""
     <div class="video-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <span style="font-weight:800; font-size:1.1em; color:#33691e;">{v['user']}</span>
             <span class="niche-badge">{v['niche']}</span>
         </div>
-        
-        <a href="{v['url']}" target="_blank" style="text-decoration:none;">
-            <div class="fake-player">
-                <div class="play-icon">▶️</div>
-            </div>
-        </a>
-        
-        <div style="background:#f9fbf7; padding:12px; border-radius:10px; border:1px solid {COR_BORDA}; margin-bottom:10px;">
+    """, unsafe_allow_html=True)
+    
+    # Lógica para pegar o ID do vídeo
+    try: vid_id = v['url'].split("/video/")[1].split("?")[0]
+    except: vid_id = "7258384074697313562"
+    
+    # O PLAYER REAL (Usamos components.html que é o jeito certo de por iframe)
+    components.html(f"""
+        <style>body{{margin:0;padding:0;}}</style>
+        <blockquote class="tiktok-embed" cite="{v['url']}" data-video-id="{vid_id}" style="max-width: 100%; min-width: 100%;" > 
+        <section> <a target="_blank" href="{v['url']}">Ver no App</a> </section> </blockquote> 
+        <script async src="https://www.tiktok.com/embed.js"></script>
+    """, height=340)
+    
+    # O RODAPÉ do card
+    st.markdown(f"""
+        <div style="background:#f9fbf7; padding:12px; border-radius:10px; border:1px solid {COR_BORDA}; margin-top:10px; margin-bottom:10px;">
             <p style="font-size:0.9em; font-weight:600; color:#555; margin:0;">💡 {v['analise']}</p>
         </div>
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; justify-content:flex-end;">
              <span style="font-weight:900; font-size:1.1em; color:{COR_TEXTO};">👁️ {v['views']}</span>
         </div>
-        
-        <a href="{v['url']}" target="_blank" class="custom-link-btn">
-            ▶️ ASSISTIR NO TIKTOK
-        </a>
     </div>
-    """
-    
-    # 2. Depois enviamos para o Streamlit com a trava de segurança ATIVADA
-    st.markdown(card_html, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v20.0 • Sistema Corrigido</center>", unsafe_allow_html=True)
+st.markdown(f"<center style='color:{COR_BOTAO}; font-weight:bold; margin-bottom:30px;'>Kiwi Tok v21.0 • Original Player</center>", unsafe_allow_html=True)
